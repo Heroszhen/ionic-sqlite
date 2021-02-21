@@ -21,6 +21,7 @@ export class SQLiteService {
         return new Promise (resolve => {
             this.platform = Capacitor.getPlatform();
             console.log("*** platform " + this.platform)
+            //alert("*** platform : " + this.platform)
             const sqlitePlugin: any = CapacitorSQLite;
             this.sqlite = new SQLiteConnection(sqlitePlugin);
             this.isService = true;
@@ -201,6 +202,18 @@ export class SQLiteService {
         } else {
             return Promise.reject(new Error(`no connection open`));
         }
-      }
-    
+    }
+
+    //localstorage
+    setStorage(key:string,value:string){
+        localStorage.setItem(key,value);
+    }
+
+    getStorage(key:string){
+        return localStorage.getItem(key);
+    }
+
+    removeStorage(key:string){
+        localStorage.removeItem(key);
+    }   
 }

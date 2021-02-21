@@ -1,0 +1,19 @@
+ion-toolbar{
+    --background:#4c8dff;
+    color:white;
+}
+#zhome .oneuser{
+    display:flex;
+    border-bottom:1px solid gainsboro;
+}
+#zhome .oneuser>div{
+    display:flex;
+    align-items: center;
+    width:40%;
+    padding:5px;
+    overflow: hidden;
+    
+}
+#zhome .oneuser>div:nth-child(3){
+    width:20%;
+}

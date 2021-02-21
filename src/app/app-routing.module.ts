@@ -3,6 +3,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'zhome',
+    loadChildren: () => import('./zhome/zhome.module').then( m => m.ZhomePageModule)
+  },
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module')
                       .then( m => m.HomePageModule)
@@ -55,9 +59,9 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'zhome',
     pathMatch: 'full'
-  },
+  }
 ];
 
 @NgModule({

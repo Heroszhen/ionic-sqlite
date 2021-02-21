@@ -2,10 +2,10 @@ import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
 
-import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';
+import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';//tables prepared in this file
 import { createSchemaContacts, setContacts } from '../utils/encrypted-set-utils';
 import { deleteDatabase } from '../utils/db-utils';
-import { Dialog } from '@capacitor/dialog';
+import { Dialog } from '@capacitor/dialog';//modal
 
 @Component({
   selector: 'app-test2dbs',
@@ -19,26 +19,28 @@ export class Test2dbsPage implements AfterViewInit {
   handlerPermissions: any;
   initPlugin: boolean = false;
 
-  constructor(private _sqlite: SQLiteService,
-              private _detailService: DetailService) {}
+  constructor(private _sqlite: SQLiteService,private _detailService: DetailService) {}
 
   async ngAfterViewInit() {
     const showAlert = async (message: string) => {
       await Dialog.alert({
-      title: 'Error Dialog',
-      message: message,
+        title: 'Error Dialog',
+        message: message,
       });
     };
-    console.log("%%%% in Test2dbsPage this._sqlite " + this._sqlite)
+    console.log("$$$ in Test2dbsPage this._sqlite " , this._sqlite);
+    alert("$$$ in Test2dbsPage this._sqlite : isService -> " + this._sqlite["isService"] +" , platform -> "+this._sqlite["platform"]);
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
       .remove('display');
       console.log("$$$ runTest was successful");
+      alert("$$$ in catch of ngAfterViewInit, runTest was successful");
     } catch (err) {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      alert(`$$$ in catch of ngAfterViewInit, runTest failed ${err.message}`);
       await showAlert(err.message);
     }
   }
@@ -47,11 +49,13 @@ export class Test2dbsPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
+      console.log(" from Echo " , result.value);
+      alert(" from Echo " + result.value);
       // initialize the connection
       const db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
-      console.log("db " + db)
+      console.log("db " , db);
+      alert("db : "+db);
       const db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
 
@@ -67,11 +71,13 @@ export class Test2dbsPage implements AfterViewInit {
       let ret: any = await db.execute(createSchema);
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSchema failed"));
+        alert("Execute createSchema failed");
       }
 
       // create synchronization table 
       ret = await db.createSyncTable();
-      console.log('$$$ createSyncTable ret.changes.changes in db ' + ret.changes.changes)
+      console.log('$$$ createSyncTable ret.changes.changes in db ' , ret.changes.changes);
+      alert('$$$ createSyncTable ret.changes.changes in db '+ ret.changes.changes)
       
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
@@ -89,16 +95,23 @@ export class Test2dbsPage implements AfterViewInit {
         return Promise.reject(new Error("Query 2 users failed"));
       }
 
+      alert("SELECT * FROM users; res.values.length : " + ret.values.length + " , ret.values[0].name : "+ret.values[0].name);  
+
+
+
+/*
       // open db testSet
       await db1.open();
 
       // create tables in db1
       ret = await db1.execute(createSchemaContacts);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
+      console.log('$$$ ret.changes.changes in db1 ' , ret.changes.changes);
+      alert('$$$ ret.changes.changes in db1 ' + ret.changes.changes);
 
       // load setContacts in db1
       ret = await db1.executeSet(setContacts);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
+      console.log('$$$ ret.changes.changes in db1 ' , ret.changes.changes);
+      alert('$$$ ret.changes.changes in db1 ' + ret.changes.changes);
       if (ret.changes.changes !== 5) {
         return Promise.reject(new Error("ExecuteSet 5 contacts failed"));
       }
@@ -159,7 +172,7 @@ export class Test2dbsPage implements AfterViewInit {
         return Promise.reject(new Error("Run [null, 'test2'] test issue#56 failed"));
       }
 
-      this._detailService.setExistingConnection(true);
+      this._detailService.setExistingConnection(true);*/
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
